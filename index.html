@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nikhil CP | Cybersecurity Expert</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Fira Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- GSAP Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <style>
+        /* Base styles */
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Fira Code', monospace;
+            background-color: #0A0A0A;
+            color: #E0E0E0;
+            overflow-x: hidden;
+        }
+
+        /* Home Section Background & Overlay */
+        #home-container {
+            position: relative;
+            overflow: hidden;
+            background-color: #0A0A0A;
+        }
+        #particle-canvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+        }
+        .home-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0A0A0A; }
+        ::-webkit-scrollbar-thumb { background: #00FFFF; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00FF7F; }
+        
+        /* Card Styles */
+        .card {
+            background: rgba(17, 24, 39, 0.5); border: 1px solid #00FFFF; backdrop-filter: blur(10px); transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 0 25px #00FFFF, 0 0 10px #00FF7F inset; }
+        
+        /* Home Page Button Styles */
+        .btn-primary { background-color: #00FFFF; color: #0A0A0A; transition: all 0.3s ease; }
+        .btn-primary:hover { background-color: #00FF7F; box-shadow: 0 0 20px #00FF7F; }
+        .btn-secondary { border: 1px solid #00FFFF; color: #00FFFF; transition: all 0.3s ease; }
+        .btn-secondary:hover { background-color: rgba(0, 255, 255, 0.1); box-shadow: 0 0 15px #00FFFF; }
+
+        /* General Button Styles (for other sections) */
+        .cybr-btn { border: 1px solid #00FFFF; color: #00FFFF; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .cybr-btn:hover { color: #0A0A0A; box-shadow: 0 0 15px #00FFFF; }
+        .cybr-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, #00FFFF, transparent); transition: left 0.4s ease; }
+        .cybr-btn:hover::before { left: 100%; }
+        .cybr-btn .btn-text { position: relative; z-index: 1; }
+        .cybr-btn .btn-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #00FFFF; transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; z-index: 0; }
+        .cybr-btn:hover .btn-bg { transform: scaleX(1); }
+
+        /* Progress Bar Styles */
+        .progress-bar-container { width: 100%; background-color: rgba(0, 255, 255, 0.1); border-radius: 5px; height: 10px; border: 1px solid rgba(0, 255, 255, 0.3); }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, #00FF7F, #00FFFF); border-radius: 5px; width: 0%; /* GSAP will animate this */ box-shadow: 0 0 10px #00FFFF; }
+
+        /* Experience Timeline */
+        .timeline { border-left: 2px solid #00FFFF; }
+        .timeline-item { position: relative; padding-left: 2.5rem; /* Fix: Added padding */ }
+        .timeline-item:before { content: ''; position: absolute; left: -11px; top: 8px; /* Fix: Adjusted top position */ width: 20px; height: 20px; background-color: #00FF7F; border-radius: 50%; border: 4px solid #0A0A0A; }
+        
+        /* Attractive Navbar Link Style */
+        .nav-link { position: relative; transition: color 0.3s ease; }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 2px;
+            background-color: #00FFFF; transform: scaleX(0); transform-origin: right;
+            transition: transform 0.3s ease-out;
+        }
+        .nav-link:hover { color: #00FFFF; }
+        .nav-link:hover::after { transform: scaleX(1); transform-origin: left; }
+        
+        /* Cybersecurity Platform Icons */
+        .platform-icon {
+            filter: grayscale(1) brightness(1.5); transition: filter 0.3s ease, transform 0.3s ease;
+            height: 32px;
+        }
+        .platform-icon:hover { filter: grayscale(0) brightness(1); transform: scale(1.1); }
+        
+        /* Section Divider */
+        .section-divider { height: 50px; width: 100%; margin: 2rem 0; }
+
+        .tech-badge { background-color: rgba(0, 255, 255, 0.1); color: #00FFFF; border: 1px solid rgba(0, 255, 255, 0.3); }
+        
+        /* Animated Profession Cursor */
+        #hero-subtitle::after {
+            content: '_';
+            animation: blink-caret .75s step-end infinite;
+            color: #00FF7F;
+        }
+        @keyframes blink-caret { from, to { opacity: 0 } 50% { opacity: 1 } }
+        
+        /* Home Page Photo Container */
+        .photo-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            mask-image: radial-gradient(circle at center, black 50%, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle at center, black 50%, transparent 80%);
+            animation: pulse 4s infinite ease-in-out;
+            transition: transform 0.3s ease;
+        }
+        #profile-image:hover {
+            transform: scale(1.05);
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), 0 0 40px rgba(0, 255, 255, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(0, 255, 255, 0.8), 0 0 80px rgba(0, 255, 255, 0.4); }
+            100% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), 0 0 40px rgba(0, 255, 255, 0.2); }
+        }
+    </style>
+</head>
+<body class="bg-gray-950">
+
+    <header class="fixed top-0 left-0 w-full bg-black bg-opacity-50 backdrop-blur-md z-50 border-b border-cyan-500/30">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#home" class="text-2xl font-bold text-cyan-400 transition-colors hover:text-green-400">Nikhil CP</a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#home" class="nav-link uppercase tracking-wider">Home</a>
+                <a href="#about" class="nav-link uppercase tracking-wider">About</a>
+                <a href="#projects" class="nav-link uppercase tracking-wider">Projects</a>
+                <a href="#achievements" class="nav-link uppercase tracking-wider">Achievements</a>
+                <a href="#blogs" class="nav-link uppercase tracking-wider">Blogs</a>
+                <a href="#services" class="nav-link uppercase tracking-wider">Services</a>
+                <a href="#contact" class="nav-link uppercase tracking-wider">Contact</a>
+            </nav>
+            <button id="mobile-menu-btn" class="md:hidden text-2xl"><i class="ph ph-list"></i></button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-900/80 backdrop-blur-sm">
+            <a href="#home" class="mobile-nav-link block text-center py-3 uppercase hover:bg-cyan-500/20">Home</a>
+            <a href="#about" class="mobile-nav-link block text-center py-3 uppercase hover:bg-cyan-500/20">About</a>
+            <a href="#projects" class="mobile-nav-link block text-center py-3 uppercase hover:bg-cyan-500/20">Projects</a>
+            <a href="#achievements" class="mobile-nav-link block text-center py-3 uppercase hover:bg-cyan-500/20">Achievements</a>
+            <a href="#blogs" class="mobile-nav-link block text-center py-3 uppercase hover:bg-cyan-500/20">Blogs</a>
+            <a href="#services" class="mobile-nav-link block text-center py-3 uppercase hover:bg-cyan-500/20">Services</a>
+            <a href="#contact" class="mobile-nav-link block text-center py-3 uppercase hover:bg-cyan-500/20">Contact</a>
+        </div>
+    </header>
+
+    <div id="home-container">
+        <canvas id="particle-canvas"></canvas>
+        <!-- HOME -->
+        <section id="home" class="min-h-screen flex items-center justify-center container mx-auto px-6 home-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center w-full">
+                <div class="text-left">
+                    <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-2 text-white anim-fade-in">Nikhil CP</h1>
+                    <h2 id="hero-subtitle" class="text-xl md:text-2xl font-semibold mb-4 text-green-400 anim-fade-in min-h-[32px]">
+                        
+                    </h2>
+                    <p class="text-lg text-gray-400 mb-8 max-w-lg anim-fade-in">
+                        Dedicated cybersecurity professional with expertise in VAPT and Cryptography, backed by global certifications.
+                    </p>
+                    <div class="flex items-center gap-4 mb-8 anim-fade-in">
+                        <a href="#contact" class="btn-primary px-6 py-3 rounded-md font-semibold">Get In Touch</a>
+                        <a href="#projects" class="btn-secondary px-6 py-3 rounded-md font-semibold">View Projects</a>
+                    </div>
+                    <div class="flex items-center gap-6 anim-fade-in">
+                        <a href="#" class="text-2xl text-gray-400 hover:text-cyan-400 transition-colors"><i class="ph ph-github-logo"></i></a>
+                        <a href="#" class="text-2xl text-gray-400 hover:text-cyan-400 transition-colors"><i class="ph ph-linkedin-logo"></i></a>
+                        <a href="#" class="text-2xl text-gray-400 hover:text-cyan-400 transition-colors"><i class="ph ph-twitter-logo"></i></a>
+                        <a href="#" class="text-2xl text-gray-400 hover:text-cyan-400 transition-colors"><i class="ph ph-medium-logo"></i></a>
+                    </div>
+                </div>
+                <div class="hidden md:flex justify-center items-center anim-fade-in">
+                    <div class="photo-container">
+                        <img id="profile-image" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHhpZzJjY3Y3a20zdDQ0djE3ZDhvb2F3YmR1NndtOXdtZ3c5cGQ3dyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/EZr27ZbJwmjE9PGyLN/giphy.gif" alt="Nikhil CP Portrait">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <main class="container mx-auto px-6">
+        <!-- ABOUT (Parent Section) -->
+        <section id="about" class="py-20">
+            <h2 class="section-title text-4xl font-bold text-center mb-12">About Me</h2>
+            
+            <!-- SKILLS -->
+            <div class="mb-20">
+                <h3 class="section-subtitle text-3xl font-bold text-cyan-400 mb-8 text-center">My Skills</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="card rounded-lg p-6 anim-card">
+                        <h4 class="text-2xl font-bold text-cyan-400 mb-4">Security Expertise</h4>
+                        <div class="space-y-4">
+                            <div class="anim-text">
+                                <div class="flex justify-between mb-1"><p>Endpoint Security & Detection</p><p>90%</p></div>
+                                <div class="progress-bar-container"><div class="progress-bar" data-width="90%"></div></div>
+                            </div>
+                            <div class="anim-text">
+                                <div class="flex justify-between mb-1"><p>Cloud Security</p><p>85%</p></div>
+                                <div class="progress-bar-container"><div class="progress-bar" data-width="85%"></div></div>
+                            </div>
+                            <div class="anim-text">
+                                <div class="flex justify-between mb-1"><p>Penetration Testing</p><p>80%</p></div>
+                                <div class="progress-bar-container"><div class="progress-bar" data-width="80%"></div></div>
+                            </div>
+                             <div class="anim-text">
+                                <div class="flex justify-between mb-1"><p>Incident Response</p><p>85%</p></div>
+                                <div class="progress-bar-container"><div class="progress-bar" data-width="85%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card rounded-lg p-6 anim-card">
+                        <h4 class="text-2xl font-bold text-cyan-400 mb-4">Cloud Platforms</h4>
+                        <div class="space-y-4">
+                            <div class="anim-text">
+                                <div class="flex justify-between mb-1"><p>Microsoft Azure</p><p>90%</p></div>
+                                <div class="progress-bar-container"><div class="progress-bar" data-width="90%"></div></div>
+                            </div>
+                            <div class="anim-text">
+                                <div class="flex justify-between mb-1"><p>Azure Sentinel</p><p>85%</p></div>
+                                <div class="progress-bar-container"><div class="progress-bar" data-width="85%"></div></div>
+                            </div>
+                            <div class="anim-text">
+                                <div class="flex justify-between mb-1"><p>AWS</p><p>75%</p></div>
+                                <div class="progress-bar-container"><div class="progress-bar" data-width="75%"></div></div>
+                            </div>
+                            <div class="anim-text">
+                                <div class="flex justify-between mb-1"><p>Microsoft Defender</p><p>90%</p></div>
+                                <div class="progress-bar-container"><div class="progress-bar" data-width="90%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card rounded-lg p-6 anim-card">
+                        <h4 class="text-2xl font-bold text-cyan-400 mb-4">Programming</h4>
+                        <div class="space-y-4">
+                            <div class="anim-text">
+                                <div class="flex justify-between mb-1"><p>Python</p><p>85%</p></div>
+                                <div class="progress-bar-container"><div class="progress-bar" data-width="85%"></div></div>
+                            </div>
+                            <div class="anim-text">
+                                <div class="flex justify-between mb-1"><p>JavaScript</p><p>80%</p></div>
+                                <div class="progress-bar-container"><div class="progress-bar" data-width="80%"></div></div>
+                            </div>
+                            <div class="anim-text">
+                                <div class="flex justify-between mb-1"><p>Bash</p><p>75%</p></div>
+                                <div class="progress-bar-container"><div class="progress-bar" data-width="75%"></div></div>
+                            </div>
+                            <div class="anim-text">
+                                <div class="flex justify-between mb-1"><p>C</p><p>70%</p></div>
+                                <div class="progress-bar-container"><div class="progress-bar" data-width="70%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXPERIENCE -->
+            <div class="mb-20">
+                <h3 class="section-subtitle text-3xl font-bold text-cyan-400 mb-8 text-center">My Experience</h3>
+                <div class="max-w-3xl mx-auto">
+                    <div class="timeline pl-8">
+                        <div class="timeline-item anim-timeline mb-12">
+                            <h4 class="anim-text text-xl font-bold text-green-400">Senior Security Analyst</h4>
+                            <p class="anim-text text-md text-gray-400 mb-2">CyberCorp Inc. | 2022 - Present</p>
+                            <p class="anim-text text-gray-300">Led red team engagements, developed advanced threat detection rules, and mentored junior analysts. Reduced critical vulnerabilities by 40% in the first year.</p>
+                        </div>
+                        <div class="timeline-item anim-timeline">
+                            <h4 class="anim-text text-xl font-bold text-green-400">Penetration Tester</h4>
+                            <p class="anim-text text-md text-gray-400 mb-2">SecureNet Solutions | 2020 - 2022</p>
+                            <p class="anim-text text-gray-300">Conducted web application, network, and mobile penetration tests for a diverse range of clients. Authored detailed reports with actionable remediation steps.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROFESSIONAL ACTIVITIES -->
+            <div class="mb-20">
+                <h3 class="section-subtitle text-3xl font-bold text-cyan-400 mb-8 text-center">My Activities</h3>
+                <div class="max-w-3xl mx-auto">
+                    <div class="timeline pl-8">
+                        <div class="timeline-item anim-timeline">
+                            <h4 class="anim-text text-xl font-bold text-green-400">Member</h4>
+                            <p class="anim-text text-md text-gray-400 mb-2">Google Developer Group | GITS | Sept 2024</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EDUCATION -->
+            <div>
+                <h3 class="section-subtitle text-3xl font-bold text-cyan-400 mb-8 text-center">My Education</h3>
+                <div class="max-w-3xl mx-auto text-center">
+                    <div class="card rounded-lg p-6 inline-block anim-card">
+                        <h4 class="anim-text text-xl font-bold text-green-400">B.Tech in Computer Science & Engineering</h4>
+                        <p class="anim-text text-md text-gray-400">GITS | 2023 - 2027</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <div class="section-divider">
+            <svg width="100%" height="100%" viewBox="0 0 1200 50" preserveAspectRatio="none"><path d="M0 25 L400 25 L450 10 L500 40 L550 10 L600 40 L650 10 L700 40 L750 25 L1200 25" stroke="#00FFFF" stroke-width="1" fill="none" opacity="0.5"></path></svg>
+        </div>
+
+        <!-- PROJECTS -->
+        <section id="projects" class="py-20">
+            <h2 class="section-title text-4xl font-bold text-center mb-12">My Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card rounded-lg overflow-hidden anim-card">
+                    <div class="p-6">
+                        <h3 class="anim-text text-xl font-bold text-cyan-400 mb-2">Phishing Detection Tool</h3>
+                        <p class="anim-text text-gray-400 mb-4">A Python-based tool that uses machine learning to identify and flag potential phishing URLs in real-time.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="anim-text tech-badge px-2 py-1 text-sm rounded-full">Python</span>
+                            <span class="anim-text tech-badge px-2 py-1 text-sm rounded-full">Scikit-learn</span>
+                            <span class="anim-text tech-badge px-2 py-1 text-sm rounded-full">Flask</span>
+                        </div>
+                        <div class="flex gap-4">
+                            <a href="#" class="anim-text font-semibold text-green-400 hover:underline">GitHub →</a>
+                            <a href="#" class="anim-text font-semibold text-green-400 hover:underline">Live Demo →</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card rounded-lg overflow-hidden anim-card">
+                    <div class="p-6">
+                        <h3 class="anim-text text-xl font-bold text-cyan-400 mb-2">Network Traffic Analyzer</h3>
+                        <p class="anim-text text-gray-400 mb-4">A custom network monitoring tool that captures and visualizes traffic to detect anomalies and potential intrusions.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="anim-text tech-badge px-2 py-1 text-sm rounded-full">C</span>
+                             <span class="anim-text tech-badge px-2 py-1 text-sm rounded-full">Scapy</span>
+                            <span class="anim-text tech-badge px-2 py-1 text-sm rounded-full">Socket Programming</span>
+                        </div>
+                        <div class="flex gap-4">
+                            <a href="#" class="anim-text font-semibold text-green-400 hover:underline">GitHub →</a>
+                        </div>
+                    </div>
+                </div>
+                 <div class="card rounded-lg overflow-hidden anim-card">
+                    <div class="p-6">
+                        <h3 class="anim-text text-xl font-bold text-cyan-400 mb-2">Cloud Security Dashboard</h3>
+                        <p class="anim-text text-gray-400 mb-4">A web dashboard built with JavaScript to monitor AWS security alerts from GuardDuty and Security Hub.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="anim-text tech-badge px-2 py-1 text-sm rounded-full">JavaScript</span>
+                            <span class="anim-text tech-badge px-2 py-1 text-sm rounded-full">AWS SDK</span>
+                            <span class="anim-text tech-badge px-2 py-1 text-sm rounded-full">Chart.js</span>
+                        </div>
+                        <div class="flex gap-4">
+                            <a href="#" class="anim-text font-semibold text-green-400 hover:underline">GitHub →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider">
+            <svg width="100%" height="100%" viewBox="0 0 1200 50" preserveAspectRatio="none"><path d="M0 25 L400 25 L450 10 L500 40 L550 10 L600 40 L650 10 L700 40 L750 25 L1200 25" stroke="#00FFFF" stroke-width="1" fill="none" opacity="0.5"></path></svg>
+        </div>
+
+        <!-- ACHIEVEMENTS & CERTIFICATIONS -->
+        <section id="achievements" class="py-20">
+            <h2 class="section-title text-4xl font-bold text-center mb-12">Achievements & Certifications</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card rounded-lg p-6 anim-card">
+                    <h3 class="text-2xl font-bold text-cyan-400 mb-4 flex items-center anim-text"><i class="ph-bold ph-trophy mr-3"></i>Achievements</h3>
+                    <ul class="list-disc list-inside text-gray-300 space-y-2">
+                        <li class="anim-text">Content will be updated soon.....</li>
+                        <li class="anim-text">Content will be updated soon.....</li>
+                        <li class="anim-text">Content will be updated soon.....</li>
+                        <li class="anim-text">Content will be updated soon....."</li>
+                    </ul>
+                </div>
+                <div class="card rounded-lg p-6 anim-card">
+                    <h3 class="text-2xl font-bold text-cyan-400 mb-4 flex items-center anim-text"><i class="ph-bold ph-seal-check mr-3"></i>Certifications</h3>
+                    <ul class="list-disc list-inside text-gray-300 space-y-2">
+                        <li class="anim-text">Offensive Security Certified Professional (OSCP)</li>
+                        <li class="anim-text">Certified Information Systems Security Professional (CISSP)</li>
+                        <li class="anim-text">Certified Ethical Hacker (CEH)</li>
+                        <li class="anim-text">AWS Certified Security - Specialty</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider">
+            <svg width="100%" height="100%" viewBox="0 0 1200 50" preserveAspectRatio="none"><path d="M0 25 L400 25 L450 10 L500 40 L550 10 L600 40 L650 10 L700 40 L750 25 L1200 25" stroke="#00FFFF" stroke-width="1" fill="none" opacity="0.5"></path></svg>
+        </div>
+
+        <!-- BLOGS -->
+        <section id="blogs" class="py-20">
+            <h2 class="section-title text-4xl font-bold text-center mb-12">My Blog</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card rounded-lg overflow-hidden anim-card"><div class="p-6"><h3 class="anim-text text-xl font-bold text-cyan-400 mb-2">The Art of Evasion</h3><p class="anim-text text-gray-400 mb-4">A deep dive into bypassing modern EDR solutions using advanced techniques.</p><a href="#" class="anim-text font-semibold text-green-400 hover:underline">Read Analysis →</a></div></div>
+                <div class="card rounded-lg overflow-hidden anim-card"><div class="p-6"><h3 class="anim-text text-xl font-bold text-cyan-400 mb-2">Deconstructing a C2</h3><p class="anim-text text-gray-400 mb-4">Reverse engineering a real-world Command & Control server communication protocol.</p><a href="#" class="anim-text font-semibold text-green-400 hover:underline">Read Teardown →</a></div></div>
+                <div class="card rounded-lg overflow-hidden anim-card"><div class="p-6"><h3 class="anim-text text-xl font-bold text-cyan-400 mb-2">Securing the Cloud</h3><p class="anim-text text-gray-400 mb-4">Common misconfigurations in AWS and how to proactively detect and fix them.</p><a href="#" class="anim-text font-semibold text-green-400 hover:underline">Read Guide →</a></div></div>
+            </div>
+        </section>
+
+        <div class="section-divider">
+            <svg width="100%" height="100%" viewBox="0 0 1200 50" preserveAspectRatio="none"><path d="M0 25 L400 25 L450 10 L500 40 L550 10 L600 40 L650 10 L700 40 L750 25 L1200 25" stroke="#00FFFF" stroke-width="1" fill="none" opacity="0.5"></path></svg>
+        </div>
+
+        <!-- MY SERVICES -->
+        <section id="services" class="py-20">
+            <h2 class="section-title text-4xl font-bold text-center mb-12">My Services</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card rounded-lg p-6 text-center anim-card"><i class="ph-bold ph-skull text-6xl text-cyan-400 mx-auto mb-4 anim-text"></i><h3 class="text-xl font-bold mb-2 anim-text">Penetration Testing</h3><p class="text-gray-400 anim-text">Comprehensive security testing for web, mobile, and network infrastructures.</p></div>
+                <div class="card rounded-lg p-6 text-center anim-card"><i class="ph-bold ph-shield-warning text-6xl text-cyan-400 mx-auto mb-4 anim-text"></i><h3 class="text-xl font-bold mb-2 anim-text">Security Audits</h3><p class="text-gray-400 anim-text">In-depth code reviews and configuration analysis to identify vulnerabilities.</p></div>
+                <div class="card rounded-lg p-6 text-center anim-card"><i class="ph-bold ph-siren text-6xl text-cyan-400 mx-auto mb-4 anim-text"></i><h3 class="text-xl font-bold mb-2 anim-text">Incident Response</h3><p class="text-gray-400 anim-text">Rapid response and forensic analysis to contain and investigate security breaches.</p></div>
+            </div>
+        </section>
+
+        <div class="section-divider">
+            <svg width="100%" height="100%" viewBox="0 0 1200 50" preserveAspectRatio="none"><path d="M0 25 L400 25 L450 10 L500 40 L550 10 L600 40 L650 10 L700 40 L750 25 L1200 25" stroke="#00FFFF" stroke-width="1" fill="none" opacity="0.5"></path></svg>
+        </div>
+
+        <!-- CONTACT + CV -->
+        <section id="contact" class="py-20 text-center">
+            <h2 class="section-title text-4xl font-bold text-center mb-4">Get In Touch</h2>
+            <p class="max-w-2xl mx-auto text-lg text-gray-400 mb-8">Ready to collaborate on securing the digital frontier. Let's connect.</p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8">
+                <a href="mailto:nikhil.cp@email.com" class="cybr-btn w-full sm:w-auto px-8 py-3 rounded-md font-semibold"><span class="btn-text">Send a Message</span><span class="btn-bg"></span></a>
+                <a href="#" class="cybr-btn w-full sm:w-auto px-8 py-3 rounded-md font-semibold"><span class="btn-text">Download CV</span><span class="btn-bg"></span></a>
+            </div>
+            
+            <div class="mb-8">
+     <h3 class="section-subtitle text-xl font-semibold text-green-400 mb-4">Cybersecurity Profiles</h3>
+     <div class="flex justify-center flex-wrap items-center gap-6">
+        <a href="#" title="TryHackMe" class="platform-icon">
+            <img src="https://assets.tryhackme.com/img/logo/thm-white.png" alt="TryHackMe Logo">
+        </a>
+        <a href="#" title="HackTheBox" class="platform-icon">
+             <img src="https://www.svgrepo.com/show/373653/hackthebox.svg" alt="HackTheBox Logo" style="filter: brightness(0) invert(1);">
+        </a>
+        <a href="#" title="HackerOne" class="platform-icon">
+             <img src="https://www.svgrepo.com/show/353852/hackerone.svg" alt="HackerOne Logo" style="filter: brightness(0) invert(1);">
+        </a>
+        <a href="#" title="Bugcrowd" class="platform-icon">
+             <img src="https://www.svgrepo.com/show/353482/bugcrowd.svg" alt="Bugcrowd Logo" style="filter: brightness(0) invert(1);">
+        </a>
+    </div>
+</div>
+
+            <div>
+                 <h3 class="section-subtitle text-xl font-semibold text-green-400 mb-4">Social Media</h3>
+                 <div class="flex justify-center space-x-6"><a href="#" class="text-3xl text-gray-400 hover:text-cyan-400 transition-all duration-300 hover:scale-125"><i class="ph ph-github-logo"></i></a><a href="#" class="text-3xl text-gray-400 hover:text-cyan-400 transition-all duration-300 hover:scale-125"><i class="ph ph-linkedin-logo"></i></a><a href="#" class="text-3xl text-gray-400 hover:text-cyan-400 transition-all duration-300 hover:scale-125"><i class="ph ph-twitter-logo"></i></a><a href="#" class="text-3xl text-gray-400 hover:text-cyan-400 transition-all duration-300 hover:scale-125"><i class="ph ph-medium-logo"></i></a></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center py-8 border-t border-cyan-500/30"><p class="text-gray-500">&copy; 2025 Designed & Developed by Nikhil CP.</p></footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- GSAP ANIMATIONS ---
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Home page fade-in
+            gsap.from(".anim-fade-in", { opacity: 0, y: 30, duration: 0.8, stagger: 0.2, delay: 0.5 });
+
+            // Animate section titles and subtitles
+            gsap.utils.toArray('.section-title, .section-subtitle').forEach(el => {
+                gsap.from(el, {
+                    scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' },
+                    opacity: 0, y: 50, duration: 0.8
+                });
+            });
+
+            // Animate cards with stagger
+            gsap.utils.toArray('.anim-card').forEach(card => {
+                gsap.from(card, {
+                    scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none none' },
+                    opacity: 0, y: 50, duration: 0.6
+                });
+                
+                // Animate text inside cards
+                gsap.from(card.querySelectorAll('.anim-text'), {
+                    scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none none' },
+                    opacity: 0, y: 20, duration: 0.5, stagger: 0.1, delay: 0.3
+                });
+            });
+            
+            // Animate timeline items
+             gsap.utils.toArray('.anim-timeline').forEach(item => {
+                gsap.from(item, {
+                    scrollTrigger: { trigger: item, start: 'top 85%', toggleActions: 'play none none none' },
+                    opacity: 0, x: -50, duration: 0.8
+                });
+            });
+
+            // Animate progress bars
+            gsap.utils.toArray('.progress-bar').forEach(bar => {
+                gsap.to(bar, {
+                    scrollTrigger: { trigger: bar.closest('.card'), start: 'top 80%', toggleActions: 'play none none none' },
+                    width: bar.dataset.width, duration: 1.5, ease: 'power2.out'
+                });
+            });
+
+            // --- PARTICLE BACKGROUND SCRIPT ---
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            let particles = [];
+            const profileImage = document.getElementById('profile-image');
+
+            class Particle {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.size = Math.random() * 1.5 + 0.5;
+                    this.speedX = (Math.random() * 2 - 1) * 0.3;
+                    this.speedY = (Math.random() * 2 - 1) * 0.3;
+                    this.color = `rgba(0, 255, 255, ${Math.random() * 0.5 + 0.2})`;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                }
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                const numberOfParticles = (canvas.width * canvas.height) / 10000;
+                for (let i = 0; i < numberOfParticles; i++) {
+                    particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
+                }
+            }
+            initParticles();
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                const profileRect = profileImage.getBoundingClientRect();
+                const profileCenterX = profileRect.left + profileRect.width / 2;
+                const profileCenterY = profileRect.top + profileRect.height / 2;
+                
+                // Add new particles emanating from the profile image
+                if (Math.random() > 0.95) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const p = new Particle(profileCenterX, profileCenterY);
+                    p.speedX = Math.cos(angle) * (Math.random() * 0.5 + 0.2);
+                    p.speedY = Math.sin(angle) * (Math.random() * 0.5 + 0.2);
+                    particles.push(p);
+                }
+
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+
+                    // Connect close particles
+                    for (let j = i; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < 100) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(0, 255, 255, ${1 - distance / 100})`;
+                            ctx.lineWidth = 0.2;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                    if (particles.length > 200) { particles.splice(i, 1); }
+                }
+                requestAnimationFrame(animateParticles);
+            }
+            animateParticles();
+            
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                initParticles();
+            });
+
+            // --- HERO TEXT ANIMATION ---
+            const heroSubtitle = document.getElementById('hero-subtitle');
+            const professions = ["Cybersecurity Expert ", "Threat Hunter ", "Penetration Tester ", "Bug Bounter ", "Cloud Security Specialist "];
+            let professionIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+
+            function animateProfession() {
+                const currentProfession = professions[professionIndex];
+                const typeSpeed = isDeleting ? 75 : 150;
+                
+                heroSubtitle.textContent = currentProfession.substring(0, charIndex);
+
+                if (!isDeleting && charIndex < currentProfession.length) {
+                    charIndex++;
+                } else if (isDeleting && charIndex > 0) {
+                    charIndex--;
+                } else {
+                    isDeleting = !isDeleting;
+                    if (!isDeleting) {
+                        professionIndex = (professionIndex + 1) % professions.length;
+                    }
+                }
+                
+                const delay = isDeleting ? typeSpeed : (charIndex === currentProfession.length ? 2000 : typeSpeed);
+                setTimeout(animateProfession, delay);
+            }
+            setTimeout(animateProfession, 1000); // Initial delay after page load
+
+
+            // --- MOBILE MENU TOGGLE ---
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn'); const mobileMenu = document.getElementById('mobile-menu');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            mobileMenuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+            mobileNavLinks.forEach(link => { link.addEventListener('click', () => { if (!mobileMenu.classList.contains('hidden')) { mobileMenu.classList.add('hidden'); } }); });
+        });
+    </script>
+</body>
+</html>
